@@ -67,8 +67,10 @@ export const signup = asyncHandler(async (req, res) => {
 });
 
 export const login = asyncHandler(async (req, res) => {
-	const { username, email, password } = req.body;
 
+	console.log("HIT lohin");
+	const { username, email, password } = req.body;
+	console.log("HIT lohin",username, email, password);
 	const user = await User.findOne({
 		$or: [{ username }, { email }],
 	});

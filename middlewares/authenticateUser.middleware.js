@@ -5,10 +5,14 @@ import jwt from "jsonwebtoken";
 
 export const authenticateUser = asyncHandler(async (req, res, next) => {
 	try {
+		console.log("HITT AUTHEN")
 		const accessToken =
 			req.cookies?.accessToken ||
 			req.header("Authorization")?.replace("Bearer ", "");
 
+
+		console.log("ACEESS",accessToken)
+		
 		
 		if (!accessToken) {
 			throw new APIError(401, "Unauthorized Request");
