@@ -10,7 +10,8 @@ export const authenticateUser = asyncHandler(async (req, res, next) => {
 			req.cookies?.accessToken ||
 			req.header("Authorization")?.replace("Bearer ", "");
 
-
+		console.log("REQ",req);
+		console.log("REQ.cookie",req.cookies);
 		console.log("ACEESS",accessToken)
 		
 		

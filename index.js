@@ -24,6 +24,7 @@ app.use(express.static("public"));
 
 app.use(
 	cors({
+		methods:["GET","POST","PUT","DELETE"],
 		origin: process.env.CORS_ORIGIN,
 		credentials: true,
 		optionsSuccessStatus: 200, //ok
