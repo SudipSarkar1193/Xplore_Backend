@@ -29,7 +29,7 @@ export const uploadOnCloudinary = async function (localFilePath,height,width,pub
 		try {
 			fs.unlinkSync(localFilePath);
 		} catch (err) {
-			console.error(`Error deleting the file locally: ${localFilePath}`);
+			console.error(`Error deleting the file locally:`);
 		}	
 
         return uploadFileResponse;
@@ -41,7 +41,7 @@ export const uploadOnCloudinary = async function (localFilePath,height,width,pub
         try {
 			fs.unlinkSync(localFilePath);
 		} catch (err) {
-			console.error(`Error deleting the file locally: ${localFilePath}`);
+			console.error(`Error deleting the file locally`);
 		} // removing the locally saved temporary file as the upload operation failed
 
         return null;
