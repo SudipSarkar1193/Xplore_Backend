@@ -87,9 +87,7 @@ export const login = asyncHandler(async (req, res) => {
 		user._id
 	);
 
-
-	console.log("AT RT FCK",accessToken, refreshToken)
-
+	console.log("AT RT FCK", accessToken, refreshToken);
 
 	const userResponse = user.toObject(); // Convert Mongoose document to plain JavaScript object
 	delete userResponse.password;
@@ -99,9 +97,11 @@ export const login = asyncHandler(async (req, res) => {
 		maxAge: 15 * 24 * 60 * 60 * 1000, //MS
 		httpOnly: true,
 		sameSite: "None",
-		secure: false,
+		secure: true,
 	};
+
 	return res
+		.header("Access-Control-Allow-Credentials", true)
 		.cookie("accessToken", accessToken, cookieOption)
 		.cookie("refreshToken", refreshToken, cookieOption)
 		.json(
@@ -138,7 +138,7 @@ export const logout = asyncHandler(async (req, res) => {
 		maxAge: 15 * 24 * 60 * 60 * 1000, //MS
 		httpOnly: true,
 		sameSite: "None",
-		secure: false,
+		secure: true,
 	};
 
 	res

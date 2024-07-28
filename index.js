@@ -16,7 +16,6 @@ dotenv.config({
 });
 const app = express();
 
-
 app.use(express.json({ limit: "5mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -24,7 +23,7 @@ app.use(express.static("public"));
 
 app.use(
 	cors({
-		methods:["GET","POST","PUT","DELETE"],
+		methods: ["GET", "POST", "PUT", "DELETE"],
 		origin: process.env.CORS_ORIGIN,
 		credentials: true,
 		optionsSuccessStatus: 200, //ok
@@ -42,14 +41,17 @@ app.use("/api/v1/users", userRoute);
 app.use("/api/v1/posts", postRoute);
 app.use("/api/v1/notifications", notificationRoute);
 
-
-
-app.on("error", (err) => {
-	console.log("ERROR:", err);
-	throw err;
-});
+// app.on("error", (err) => {
+// 	console.log("ERROR:", err);
+// 	throw err;
+// });
 
 app.listen(process.env.PORT, async () => {
-	console.log(`\nServer is running at port : ${process.env.PORT}`);
-	await connectDB();
+	try {
+		console.log(`\nServer is running at port : ${process.env.PORT}`);
+		await connectDB();
+	} catch (error) {
+		console.log(error);
+		throw error;
+	}
 });
