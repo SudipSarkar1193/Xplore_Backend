@@ -10,7 +10,7 @@ const generateAccessAndRefreshToken = async (uid) => {
 	const accessToken = await user.generateAccessToken();
 	const refreshToken = await user.generateRefreshToken();
 	user.refreshToken = refreshToken;
-	user.save();
+	await user.save();
 	return { accessToken, refreshToken };
 };
 
@@ -86,6 +86,10 @@ export const login = asyncHandler(async (req, res) => {
 	const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
 		user._id
 	);
+
+
+	console.log("AT RT FCK",accessToken, refreshToken)
+
 
 	const userResponse = user.toObject(); // Convert Mongoose document to plain JavaScript object
 	delete userResponse.password;
