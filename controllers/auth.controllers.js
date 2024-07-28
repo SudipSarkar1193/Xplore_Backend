@@ -5,7 +5,6 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { APIResponse } from "../utils/APIResponse.js";
 import crypto from "crypto";
 
-
 const generateAccessAndRefreshToken = async (user) => {
 	const accessToken = await user.generateAccessToken();
 	const refreshToken = await user.generateRefreshToken();
@@ -15,7 +14,9 @@ const generateAccessAndRefreshToken = async (user) => {
 };
 
 export const signup = asyncHandler(async (req, res) => {
+	console.log("HIT");
 	const { fullName, username, email, password } = req.body;
+	console.log("HIT", req.body);
 
 	if (
 		[fullName, username, email, password].some(
@@ -60,19 +61,10 @@ export const signup = asyncHandler(async (req, res) => {
 		coverImg: null,
 	});
 
-	
 	return res
 		.status(200)
-		.json(
-			new APIResponse(
-				200,
-				{},
-				`Successfully Signed in`
-			)
-		);
+		.json(new APIResponse(200, {}, `Successfully Signed in`));
 });
-
-
 
 export const login = asyncHandler(async (req, res) => {
 	const { username, email, password } = req.body;
