@@ -5,7 +5,8 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { APIResponse } from "../utils/APIResponse.js";
 import crypto from "crypto";
 
-const generateAccessAndRefreshToken = async (user) => {
+const generateAccessAndRefreshToken = async (uid) => {
+	const user = await User.findById(uid);
 	const accessToken = await user.generateAccessToken();
 	const refreshToken = await user.generateRefreshToken();
 	user.refreshToken = refreshToken;
@@ -67,10 +68,9 @@ export const signup = asyncHandler(async (req, res) => {
 });
 
 export const login = asyncHandler(async (req, res) => {
-
 	console.log("HIT lohin");
 	const { username, email, password } = req.body;
-	console.log("HIT lohin",username, email, password);
+	console.log("HIT lohin", username, email, password);
 	const user = await User.findOne({
 		$or: [{ username }, { email }],
 	});
@@ -83,8 +83,9 @@ export const login = asyncHandler(async (req, res) => {
 		throw new APIError(400, "Invalid credential");
 	}
 
-	const { accessToken, refreshToken } =
-		await generateAccessAndRefreshToken(user);
+	const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
+		user._id
+	);
 
 	const userResponse = user.toObject(); // Convert Mongoose document to plain JavaScript object
 	delete userResponse.password;
@@ -93,7 +94,7 @@ export const login = asyncHandler(async (req, res) => {
 	const cookieOption = {
 		maxAge: 15 * 24 * 60 * 60 * 1000, //MS
 		httpOnly: true,
-		sameSite: "strict",
+		sameSite: "lax",
 		secure: false,
 	};
 	return res
@@ -130,7 +131,9 @@ export const logout = asyncHandler(async (req, res) => {
 
 	// Clear the response cookies
 	const cookieOption = {
+		maxAge: 15 * 24 * 60 * 60 * 1000,
 		httpOnly: true,
+		sameSite: "lax",
 		secure: false,
 	};
 
