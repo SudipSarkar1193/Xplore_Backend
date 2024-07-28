@@ -98,7 +98,7 @@ export const login = asyncHandler(async (req, res) => {
 	const cookieOption = {
 		maxAge: 15 * 24 * 60 * 60 * 1000, //MS
 		httpOnly: true,
-		sameSite: "lax",
+		sameSite: "None",
 		secure: false,
 	};
 	return res
@@ -135,9 +135,9 @@ export const logout = asyncHandler(async (req, res) => {
 
 	// Clear the response cookies
 	const cookieOption = {
-		maxAge: 15 * 24 * 60 * 60 * 1000,
+		maxAge: 15 * 24 * 60 * 60 * 1000, //MS
 		httpOnly: true,
-		sameSite: "lax",
+		sameSite: "None",
 		secure: false,
 	};
 
