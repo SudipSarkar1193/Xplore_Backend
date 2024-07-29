@@ -65,7 +65,7 @@ export const signup = asyncHandler(async (req, res) => {
 
 	return res
 		.status(200)
-		.json(new APIResponse(200, {}, `Successfully Signed in`));
+		.json(new APIResponse(200, {username:newUser?.username}, `Successfully Signed in`));
 });
 
 export const login = asyncHandler(async (req, res) => {
