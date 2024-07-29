@@ -21,25 +21,7 @@ export const signup = asyncHandler(async (req, res) => {
 	username = username?.toLowerCase();
 	username = username?.trim();
 	username = username?.replace(" ", "");
-
-	// username
-	// 	.replace("@", "")
-	// 	.replace("#", "")
-	// 	.replace("/", "")
-	// 	.replace(">", "")
-	// 	.replace("`", "")
-	// 	.replace("<", "")
-	// 	.replace("$", "")
-	// 	.replace("%", "")
-	// 	.replace("^", "")
-	// 	.replace("&", "")
-	// 	.replace("*", "")
-	// 	.replace("(", "")
-	// 	.replace(")", "")
-	// 	.replace("+", "")
-	// 	.replace("=", "")
-	// 	.replace("+", "")
-	// 	.replace("|", "");
+	username = username.replace(/[@#\/>\`$%^&*()+|]/g, "");
 
 	if (
 		[fullName, username, email, password].some(
