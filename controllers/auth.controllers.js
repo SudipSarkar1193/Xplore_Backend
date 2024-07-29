@@ -18,26 +18,27 @@ export const signup = asyncHandler(async (req, res) => {
 	const { fullName, email, password } = req.body;
 	let { username } = req.body;
 
-	username = username
-		?.toLowerCase()
-		.trim()
-		.replace("@", "")
-		.replace("#", "")
-		.replace("/", "")
-		.replace(">", "")
-		.replace("`", "")
-		.replace("<", "")
-		.replace("$", "")
-		.replace("%", "")
-		.replace("^", "")
-		.replace("&", "")
-		.replace("*", "")
-		.replace("(", "")
-		.replace(")", "")
-		.replace("+", "")
-		.replace("=", "")
-		.replace("+", "")
-		.replace("|", "");
+	username = username?.toLowerCase();
+	username = username?.trim();
+
+	// username
+	// 	.replace("@", "")
+	// 	.replace("#", "")
+	// 	.replace("/", "")
+	// 	.replace(">", "")
+	// 	.replace("`", "")
+	// 	.replace("<", "")
+	// 	.replace("$", "")
+	// 	.replace("%", "")
+	// 	.replace("^", "")
+	// 	.replace("&", "")
+	// 	.replace("*", "")
+	// 	.replace("(", "")
+	// 	.replace(")", "")
+	// 	.replace("+", "")
+	// 	.replace("=", "")
+	// 	.replace("+", "")
+	// 	.replace("|", "");
 
 	if (
 		[fullName, username, email, password].some(
