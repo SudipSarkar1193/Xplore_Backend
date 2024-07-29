@@ -18,7 +18,26 @@ export const signup = asyncHandler(async (req, res) => {
 	const { fullName, email, password } = req.body;
 	let { username } = req.body;
 
-	username = username?.toLowerCase();
+	username = username
+		?.toLowerCase()
+		.trim()
+		.replace("@", "")
+		.replace("#", "")
+		.replace("/", "")
+		.replace(">", "")
+		.replace("`", "")
+		.replace("<", "")
+		.replace("$", "")
+		.replace("%", "")
+		.replace("^", "")
+		.replace("&", "")
+		.replace("*", "")
+		.replace("(", "")
+		.replace(")", "")
+		.replace("+", "")
+		.replace("=", "")
+		.replace("+", "")
+		.replace("|", "");
 
 	if (
 		[fullName, username, email, password].some(
@@ -29,16 +48,14 @@ export const signup = asyncHandler(async (req, res) => {
 	}
 
 	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-	const regex = /^[a-zA-Z0-9_]+$/;
-	
-	username = username.trim();
+	// const regex = /^[a-zA-Z0-9_]+$/;
 
-	if (!regex.test(username)) {
-		throw new APIError(
-			400,
-			" Only letters, numbers, and underscores are allowed"
-		);
-	}
+	// if (!regex.test(username)) {
+	// 	throw new APIError(
+	// 		400,
+	// 		" Only letters, numbers, and underscores are allowed"
+	// 	);
+	// }
 
 	if (!emailRegex.test(email)) {
 		throw new APIError(400, "Invalid Email format");
@@ -67,7 +84,13 @@ export const signup = asyncHandler(async (req, res) => {
 
 	return res
 		.status(200)
-		.json(new APIResponse(200, {username:newUser?.username}, `Successfully Signed in`));
+		.json(
+			new APIResponse(
+				200,
+				{ username: newUser?.username },
+				`Successfully Signed in`
+			)
+		);
 });
 
 export const login = asyncHandler(async (req, res) => {
