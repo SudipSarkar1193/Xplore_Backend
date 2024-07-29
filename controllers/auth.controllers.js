@@ -15,9 +15,7 @@ const generateAccessAndRefreshToken = async (uid) => {
 };
 
 export const signup = asyncHandler(async (req, res) => {
-	console.log("HIT");
 	const { fullName, username, email, password } = req.body;
-	console.log("HIT", req.body);
 
 	if (
 		[fullName, username, email, password].some(
@@ -29,8 +27,8 @@ export const signup = asyncHandler(async (req, res) => {
 
 	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 	const regex = /^[a-zA-Z0-9_]+$/;
-
-	if (!regex.test(username)) {
+	const trimmedUsername = username.trim();
+	if (!regex.test(trimmedUsername)) {
 		throw new APIError(
 			400,
 			" Only letters, numbers, and underscores are allowed"
@@ -68,9 +66,9 @@ export const signup = asyncHandler(async (req, res) => {
 });
 
 export const login = asyncHandler(async (req, res) => {
-	console.log("HIT lohin");
+	
 	const { username, email, password } = req.body;
-	console.log("HIT lohin", username, email, password);
+	
 	const user = await User.findOne({
 		$or: [{ username }, { email }],
 	});
@@ -87,7 +85,7 @@ export const login = asyncHandler(async (req, res) => {
 		user._id
 	);
 
-	console.log("AT RT FCK", accessToken, refreshToken);
+	
 
 	const userResponse = user.toObject(); // Convert Mongoose document to plain JavaScript object
 	delete userResponse.password;
