@@ -20,6 +20,7 @@ export const signup = asyncHandler(async (req, res) => {
 
 	username = username?.toLowerCase();
 	username = username?.trim();
+	username = username?.replace(" ", "");
 
 	// username
 	// 	.replace("@", "")
