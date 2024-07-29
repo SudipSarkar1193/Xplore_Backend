@@ -30,8 +30,10 @@ export const signup = asyncHandler(async (req, res) => {
 
 	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 	const regex = /^[a-zA-Z0-9_]+$/;
-	const trimmedUsername = username.trim();
-	if (!regex.test(trimmedUsername)) {
+	
+	username = username.trim();
+
+	if (!regex.test(username)) {
 		throw new APIError(
 			400,
 			" Only letters, numbers, and underscores are allowed"
