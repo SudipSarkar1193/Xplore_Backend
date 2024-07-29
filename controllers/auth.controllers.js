@@ -15,7 +15,10 @@ const generateAccessAndRefreshToken = async (uid) => {
 };
 
 export const signup = asyncHandler(async (req, res) => {
-	const { fullName, username, email, password } = req.body;
+	const { fullName, email, password } = req.body;
+	let { username } = req.body;
+
+	username = username?.toLowerCase();
 
 	if (
 		[fullName, username, email, password].some(
@@ -66,9 +69,8 @@ export const signup = asyncHandler(async (req, res) => {
 });
 
 export const login = asyncHandler(async (req, res) => {
-	
 	const { username, email, password } = req.body;
-	
+
 	const user = await User.findOne({
 		$or: [{ username }, { email }],
 	});
@@ -84,8 +86,6 @@ export const login = asyncHandler(async (req, res) => {
 	const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
 		user._id
 	);
-
-	
 
 	const userResponse = user.toObject(); // Convert Mongoose document to plain JavaScript object
 	delete userResponse.password;
