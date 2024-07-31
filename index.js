@@ -23,12 +23,16 @@ app.use(express.static("public"));
 
 app.use(
 	cors({
-		methods: ["GET", "POST", "PUT", "DELETE"],
-		origin: [process.env.CORS_ORIGIN, "http://localhost:5173"],
+		origin: process.env.CORS_ORIGIN,
+		methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+		allowedHeaders: ["Content-Type", "Authorization"],
 		credentials: true,
-		optionsSuccessStatus: 200, //ok
+		optionsSuccessStatus: 200,
 	})
 );
+
+// Respond to preflight requests
+app.options("*", cors());
 
 // app.get("/", (req, res) => {
 // 	res.json({
