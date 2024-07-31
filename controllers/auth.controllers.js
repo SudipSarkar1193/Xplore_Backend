@@ -168,7 +168,7 @@ export const getCurrentUser = asyncHandler(async (req, res) => {
 	);
 
 	if (!user) {
-		throw new APIError("No authenticated user found");
+		throw new APIError(404, "No authenticated user found");
 	}
 	return res.status(200).json(user);
 });
