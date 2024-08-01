@@ -9,10 +9,11 @@ import {
 } from "../utils/cloudinary.js";
 
 export const getProfile = asyncHandler(async (req, res) => {
-	const { username } = req.params;
-	const user = await User.findOne({ username }).select(
-		"-password -refreshToken"
-	);
+	const { id } = req.params;
+	if (!id) {
+		throw new APIError(404, "User's ID not found");
+	}
+	const user = await User.findById(id).select("-password -refreshToken");
 	if (!user) {
 		throw new APIError(404, "User not found");
 	}

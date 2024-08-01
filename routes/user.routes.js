@@ -11,7 +11,7 @@ import { ApiErrorResponseHandler } from "../middlewares/handleAPIErrorResponse.j
 const router = express.Router();
 
 router.get(
-	"/profile/:username",
+	"/profile/:id",
 	authenticateUser,
 	getProfile,
 	ApiErrorResponseHandler
