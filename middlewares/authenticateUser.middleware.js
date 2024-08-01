@@ -36,9 +36,9 @@ export const authenticateUser = asyncHandler(async (req, res, next) => {
 		req.user = user
 
 		next();
-		
+
 	} catch (error) {
-		console.error(error)
+		console.error("Authentication error : ",error)
 		throw new APIError(500, error.message);
 	}
 });
