@@ -163,6 +163,10 @@ export const logout = asyncHandler(async (req, res) => {
 });
 
 export const getCurrentUser = asyncHandler(async (req, res) => {
+	if (!req.user) {
+		throw new APIError(404, "No authenticated user found");
+	}
+
 	const user = await User.findById(req.user._id).select(
 		"-password -refreshToken"
 	);
