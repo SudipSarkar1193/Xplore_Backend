@@ -12,9 +12,8 @@ export const authenticateUser = asyncHandler(async (req, res, next) => {
 			req.header("Authorization")?.replace("Bearer ", "");
 
 		if (!accessToken) {
-			console.error("No access token found ");
-			console.log("req.user", req.user);
-			throw new APIError(401, "Unauthorized Request");
+			//throw new APIError(401, "Unauthorized Request");
+			next(new APIError(401, "Unauthorized Request"));
 		}
 
 		const verifiedToken = jwt.verify(
@@ -23,20 +22,23 @@ export const authenticateUser = asyncHandler(async (req, res, next) => {
 		);
 
 		if (!verifiedToken) {
-			throw new APIError(401, "Unauthorized Request");
+			//throw new APIError(401, "Unauthorized Request");
+			next(new APIError(401, "Unauthorized Request"));
 		}
 
 		const user = await User.findById(verifiedToken._id).select(
 			"_id username email profileImg username fullName"
 		);
 		if (!user) {
-			throw new APIError(404, "User not found.");
+			//	throw new APIError(404, "User not found.");
+			next(new APIError(404, "User not found..."));
 		}
 		req.user = user;
 
 		next();
 	} catch (error) {
 		console.error("Authentication error : ", error);
-		throw new APIError(500, error.message);
+		//throw new APIError(500, error.message);
+		next(new APIError(500, error.message));
 	}
 });
