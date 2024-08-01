@@ -4,24 +4,23 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import jwt from "jsonwebtoken";
 
 export const authenticateUser = asyncHandler(async (req, res, next) => {
-	
 	try {
-		req.user = null ;
+		req.user = null;
 
 		const accessToken =
-			req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ", "") ;
-		
-		
+			req.cookies?.accessToken ||
+			req.header("Authorization")?.replace("Bearer ", "");
+
 		if (!accessToken) {
+			console.error("No access token found ");
+			console.log("req.user", req.user);
 			throw new APIError(401, "Unauthorized Request");
 		}
-		
-		const verifiedToken =  jwt.verify(
+
+		const verifiedToken = jwt.verify(
 			accessToken,
 			process.env.ACCESS_TOKEN_SECRET
 		);
-
-		
 
 		if (!verifiedToken) {
 			throw new APIError(401, "Unauthorized Request");
@@ -33,12 +32,11 @@ export const authenticateUser = asyncHandler(async (req, res, next) => {
 		if (!user) {
 			throw new APIError(404, "User not found.");
 		}
-		req.user = user
+		req.user = user;
 
 		next();
-
 	} catch (error) {
-		console.error("Authentication error : ",error)
+		console.error("Authentication error : ", error);
 		throw new APIError(500, error.message);
 	}
 });
