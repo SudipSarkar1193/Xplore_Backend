@@ -67,10 +67,11 @@ export const signup = asyncHandler(async (req, res) => {
 		coverImg: null,
 	});
 
-	const token = await VerificationToken?.create({
-		userId: newUser._id,
-		token: crypto.randomBytes(32).toString("hex"),
-	});
+	// const token = await VerificationToken?.create({
+	// 	userId: newUser._id,
+	// 	token: crypto.randomBytes(32).toString("hex"),
+	// });
+	const token = { token: "TOKENNN" };
 
 	const url = `${process.env.FRONTEND_URL}/users/${newUser._id}/verify/${token?.token}`;
 
@@ -93,7 +94,6 @@ export const signup = asyncHandler(async (req, res) => {
 				`Verification link sent to your email : \n${newUser.email}`
 			)
 		);
-
 });
 
 export const verifyEmail = asyncHandler(async (req, res) => {
@@ -137,8 +137,6 @@ export const verifyEmail = asyncHandler(async (req, res) => {
 			)
 		);
 });
-
-
 
 export const login = asyncHandler(async (req, res) => {
 	const { username, email, password } = req.body;
