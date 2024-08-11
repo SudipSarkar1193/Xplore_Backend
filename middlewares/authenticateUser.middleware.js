@@ -3,7 +3,6 @@ import { APIError } from "../utils/APIError.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import jwt from "jsonwebtoken";
 
-
 export const authenticateUser = asyncHandler(async (req, res, next) => {
 	try {
 		req.user = null;
@@ -37,7 +36,16 @@ export const authenticateUser = asyncHandler(async (req, res, next) => {
 
 		next();
 	} catch (error) {
-		console.error("Authentication error:", error);
-		next(new APIError(500, error.message));
+		if (error.name === "TokenExpiredError") {
+			// Handle token expiration
+			return next(new APIError(401, "Session expired. Please log in again."));
+		} else if (error.name === "JsonWebTokenError") {
+			// Handle invalid token
+			return next(new APIError(401, "Invalid token. Please log in again."));
+		} else {
+			// Handle other errors
+			console.error("Authentication error:", error);
+			next(new APIError(500, error.message));
+		}
 	}
 });
