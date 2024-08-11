@@ -30,7 +30,7 @@ export const signup = asyncHandler(async (req, res) => {
 			(fld) => fld == null || fld.trim() === ""
 		)
 	) {
-		throw new APIError(400, "All fields are required");
+		throw new APIError(400, "All fields are required..");
 	}
 
 	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
