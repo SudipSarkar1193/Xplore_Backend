@@ -4,6 +4,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { APIResponse } from "../utils/APIResponse.js";
 import { sendMail } from "../utils/sendMail.js";
+import { VerificationToken } from "../models/verificationToken.model.js";
 import crypto from "crypto";
 
 const generateAccessAndRefreshToken = async (uid) => {
@@ -67,11 +68,10 @@ export const signup = asyncHandler(async (req, res) => {
 		coverImg: null,
 	});
 
-	// const token = await VerificationToken?.create({
-	// 	userId: newUser._id,
-	// 	token: crypto.randomBytes(32).toString("hex"),
-	// });
-	const token = { token: "TOKENNN" };
+	const token = await VerificationToken?.create({
+		userId: newUser._id,
+		token: crypto.randomBytes(32).toString("hex"),
+	});
 
 	const url = `${process.env.FRONTEND_URL}/users/${newUser._id}/verify/${token?.token}`;
 
@@ -151,6 +151,38 @@ export const login = asyncHandler(async (req, res) => {
 
 	if (!isPasswordCorrect || !user) {
 		throw new APIError(400, "Invalid credential");
+	}
+
+	if (!user.verified) {
+		try {
+			let token = await VerificationToken.findOne({ userId: user._id });
+
+			if (!token) {
+				token = await VerificationToken.create({
+					userId: user._id,
+					token: crypto.randomBytes(32).toString("hex"),
+				});
+
+				const url = `${process.env.FRONTEND_URL}/users/${user._id}/verify/${token.token}`;
+
+				await sendMail(
+					newUser.email,
+					"Email Verification",
+					`Please click on this link to get verfied :\n${url}`
+				);
+			}
+			return res
+				.status(200)
+				.json(
+					new APIResponse(
+						200,
+						{},
+						`Verification link sent to your email : \n${user.email}`
+					)
+				);
+		} catch (error) {
+			console.log(error);
+		}
 	}
 
 	const { accessToken, refreshToken } = await generateAccessAndRefreshToken(

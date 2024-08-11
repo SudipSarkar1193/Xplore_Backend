@@ -4,6 +4,7 @@ import {
 	login,
 	logout,
 	signup,
+	verifyEmail,
 } from "../controllers/auth.controllers.js";
 
 import { authenticateUser } from "../middlewares/authenticateUser.middleware.js";
@@ -14,7 +15,7 @@ const router = express.Router();
 router.post("/signup", signup, ApiErrorResponseHandler);
 router.post("/login", login, ApiErrorResponseHandler);
 
-
+router.get("/:id/verify/:token", verifyEmail, ApiErrorResponseHandler);
 
 
 //SECURE routes
