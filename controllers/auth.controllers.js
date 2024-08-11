@@ -3,6 +3,7 @@ import { APIError } from "../utils/APIError.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { APIResponse } from "../utils/APIResponse.js";
+import { sendMail } from "../utils/sendMail.js";
 import crypto from "crypto";
 
 const generateAccessAndRefreshToken = async (uid) => {
@@ -66,16 +67,78 @@ export const signup = asyncHandler(async (req, res) => {
 		coverImg: null,
 	});
 
+	const token = await VerificationToken?.create({
+		userId: newUser._id,
+		token: crypto.randomBytes(32).toString("hex"),
+	});
+
+	const url = `${process.env.FRONTEND_URL}/users/${newUser._id}/verify/${token?.token}`;
+
+	await sendMail(
+		newUser.email,
+		"Email Verification for Xplore",
+		`Please click on this link to get verfied :\n${url}`
+	);
+
+	const resUser = await User.findById(newUser._id).select(
+		"-password -refreshToken"
+	);
+
 	return res
 		.status(200)
 		.json(
 			new APIResponse(
 				200,
-				{ username: newUser?.username },
-				`Successfully Signed in`
+				{ user: resUser },
+				`Verification link sent to your email : \n${newUser.email}`
+			)
+		);
+
+});
+
+export const verifyEmail = asyncHandler(async (req, res) => {
+	const { id: userId, token } = req.params;
+
+	const user = await User.findById(userId.toString());
+
+	if (!user) {
+		throw new APIError(404, "Invalid link");
+	}
+
+	const verifiedToken = await VerificationToken.findOne({ userId, token });
+
+	if (!verifiedToken) {
+		throw new APIError(404, "Invalid link");
+	}
+	let isVerified = verifiedToken.token == token;
+
+	let updatedUser = null;
+	if (isVerified) {
+		updatedUser = await User.findByIdAndUpdate(
+			userId,
+			{
+				verified: true,
+			},
+			{
+				new: true,
+			}
+		);
+	}
+
+	await VerificationToken.deleteOne({ _id: verifiedToken._id });
+
+	return res
+		.status(200)
+		.json(
+			new APIResponse(
+				200,
+				{ verifiedEmail: updatedUser?.email || null },
+				"Verified Successfully"
 			)
 		);
 });
+
+
 
 export const login = asyncHandler(async (req, res) => {
 	const { username, email, password } = req.body;
