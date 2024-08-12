@@ -1,6 +1,5 @@
 import express from "express";
 import {
-	checkMail,
 	getCurrentUser,
 	googleSignIn,
 	login,
@@ -11,13 +10,14 @@ import {
 
 import { authenticateUser } from "../middlewares/authenticateUser.middleware.js";
 import { ApiErrorResponseHandler } from "../middlewares/handleAPIErrorResponse.js";
+import { checkMail } from "../middlewares/checkMail.middleware.js";
 
 const router = express.Router();
 
 router.post("/signup", signup, ApiErrorResponseHandler);
-router.post("/google", googleSignIn, ApiErrorResponseHandler);
+router.post("/google", checkMail, googleSignIn, ApiErrorResponseHandler);
 router.post("/login", login, ApiErrorResponseHandler);
-router.post("/checkmail", checkMail, ApiErrorResponseHandler);
+
 
 router.get("/:id/verify/:token", verifyEmail, ApiErrorResponseHandler);
 

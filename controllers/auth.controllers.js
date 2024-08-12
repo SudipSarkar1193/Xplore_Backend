@@ -297,24 +297,4 @@ export const getCurrentUser = asyncHandler(async (req, res) => {
 	return res.status(200).json(user);
 });
 
-export const checkMail = asyncHandler(async (req, res) => {
-	const { email } = req.body; // Access email from the request body
 
-	if (!email) {
-		return res
-			.status(400)
-			.json(new APIResponse(400, false, "Email is required"));
-	}
-
-	console.log(email);
-
-	const user = await User.findOne({ email });
-
-	if (user) {
-		return res
-			.status(200)
-			.json(new APIResponse(200, true, "User with this mail already exists"));
-	} else {
-		return res.status(200).json(new APIResponse(200, false, "Okay"));
-	}
-});
