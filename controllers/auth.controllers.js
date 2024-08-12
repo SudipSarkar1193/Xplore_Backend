@@ -274,12 +274,8 @@ export const googleSignIn = asyncHandler(async (req, res) => {
 	const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
 		user._id
 	);
-	console.log("accessToken", accessToken);
-	console.log("refreshToken", refreshToken);
-
-	const userResponse = user.toObject(); // Convert Mongoose document to plain JavaScript object
-	delete userResponse.password;
-	delete userResponse.refreshToken;
+	console.log("accessToken ======", accessToken);
+	console.log("refreshToken =====", refreshToken);
 
 	const cookieOption = {
 		maxAge: 15 * 24 * 60 * 60 * 1000, //MS
