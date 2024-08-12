@@ -16,7 +16,22 @@ export const checkMail = async (req, res, next) => {
 		const user = await User.findOne({ email });
 
 		if (user) {
-			return next(new APIError(401, "User with this mail already exists..."));
+			const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
+				user._id
+			);
+
+			const cookieOption = {
+				maxAge: 15 * 24 * 60 * 60 * 1000, //MS
+				httpOnly: true,
+				sameSite: "None",
+				secure: true,
+			};
+
+			return res
+				.header("Access-Control-Allow-Credentials", true)
+				.cookie("accessToken", accessToken, cookieOption)
+				.cookie("refreshToken", refreshToken, cookieOption)
+				.json(new APIResponse(200, {}, "User successfully logged in"));
 		}
 
 		next();
