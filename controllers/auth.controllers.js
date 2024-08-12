@@ -7,7 +7,7 @@ import { sendMail } from "../utils/sendMail.js";
 import { VerificationToken } from "../models/verificationToken.model.js";
 import crypto from "crypto";
 
-const generateAccessAndRefreshToken = async (uid) => {
+export const generateAccessAndRefreshToken = async (uid) => {
 	const user = await User.findById(uid);
 	const accessToken = await user.generateAccessToken();
 	const refreshToken = await user.generateRefreshToken();
