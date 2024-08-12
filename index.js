@@ -54,6 +54,12 @@ app.use("/api/v1/users", userRoute);
 app.use("/api/v1/posts", postRoute);
 app.use("/api/v1/notifications", notificationRoute);
 
+const cookieOption = {
+	maxAge: 15 * 24 * 60 * 60 * 1000, //MS
+	httpOnly: true,
+	sameSite: "None",
+	secure: true,
+};
 app.get("/test-cookie", (req, res) => {
 	res
 		.cookie("testCookie", "testValue", cookieOption)
