@@ -274,6 +274,8 @@ export const googleSignIn = asyncHandler(async (req, res) => {
 	const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
 		user._id
 	);
+	console.log("accessToken", accessToken);
+	console.log("refreshToken", refreshToken);
 
 	const userResponse = user.toObject(); // Convert Mongoose document to plain JavaScript object
 	delete userResponse.password;
