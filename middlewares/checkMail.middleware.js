@@ -1,4 +1,5 @@
 import { User } from "../models/user.model.js";
+import { APIError } from "../utils/APIError.js";
 
 export const checkMail = async (req, res, next) => {
 	try {
