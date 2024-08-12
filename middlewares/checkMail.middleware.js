@@ -4,6 +4,7 @@ import { APIError } from "../utils/APIError.js";
 import { APIResponse } from "../utils/APIResponse.js";
 
 export const checkMail = async (req, res, next) => {
+	req.gUser = null;
 	try {
 		const { email } = req.body; // Access email from the request body
 
@@ -18,24 +19,9 @@ export const checkMail = async (req, res, next) => {
 		const user = await User.findOne({ email });
 
 		if (user) {
-			const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
-				user._id
-			);
-
-			const cookieOption = {
-				maxAge: 15 * 24 * 60 * 60 * 1000, //MS
-				httpOnly: true,
-				sameSite: "None",
-				secure: true,
-			};
-
-			res
-				.header("Access-Control-Allow-Credentials", true)
-				.cookie("accessToken", accessToken, cookieOption)
-				.cookie("refreshToken", refreshToken, cookieOption)
-				.json(new APIResponse(200, {}, "User successfully logged in"));
-
-			return next(new APIError(401, "Already exist !!!!"));
+			req.gUser = user;
+			console.log(req.gUser);
+			return next();
 		}
 
 		next();

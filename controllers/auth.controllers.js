@@ -238,36 +238,41 @@ export const logout = asyncHandler(async (req, res) => {
 });
 
 export const googleSignIn = asyncHandler(async (req, res) => {
-	const { name, email, profileImg, firebaseId } = req.body;
+	let user;
+	console.log("req.gUser",req.gUser)
+	if (req.gUser) {
+		user = req.gUser;
+	} else {
+		const { name, email, profileImg, firebaseId } = req.body;
 
-	let user = await User.findOne({ email });
-	if (user) {
-		throw new APIError(409, "User with this email already exists");
-	}
-	let username = name?.trim();
-	username = username?.toLowerCase();
-	username = username?.replace(" ", "");
-
-	let isUnique = false;
-
-	do {
-		const randInt = Math.floor(Math.random() * 900) + 10;
-		const potentialUsername = username + randInt;
-		if (!(await User.findOne({ username: potentialUsername }))) {
-			username = potentialUsername;
-			isUnique = true;
+		user = await User.findOne({ email });
+		if (user) {
+			throw new APIError(409, "User with this email already exists");
 		}
-	} while (!isUnique);
+		let username = name?.trim();
+		username = username?.toLowerCase();
+		username = username?.replace(" ", "");
 
-	user = await User.create({
-		fullName: name,
-		username,
-		email,
-		profileImg,
-		firebaseId,
-	});
-	console.log("user BAL", user);
+		let isUnique = false;
 
+		do {
+			const randInt = Math.floor(Math.random() * 900) + 10;
+			const potentialUsername = username + randInt;
+			if (!(await User.findOne({ username: potentialUsername }))) {
+				username = potentialUsername;
+				isUnique = true;
+			}
+		} while (!isUnique);
+
+		user = await User.create({
+			fullName: name,
+			username,
+			email,
+			profileImg,
+			firebaseId,
+		});
+		console.log("user BAL", user);
+	}
 	const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
 		user._id
 	);
