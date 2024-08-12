@@ -239,7 +239,7 @@ export const logout = asyncHandler(async (req, res) => {
 
 export const googleSignIn = asyncHandler(async (req, res) => {
 	let user;
-	console.log("req.gUser",req.gUser)
+	
 	if (req.gUser) {
 		user = req.gUser;
 	} else {
@@ -271,13 +271,13 @@ export const googleSignIn = asyncHandler(async (req, res) => {
 			profileImg,
 			firebaseId,
 		});
-		console.log("user BAL", user);
+		
 	}
 	const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
 		user._id
 	);
-	console.log("accessToken =====", accessToken);
-	console.log("refreshToken =====", refreshToken);
+	
+	
 
 	const cookieOption = {
 		maxAge: 15 * 24 * 60 * 60 * 1000, //MS

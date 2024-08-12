@@ -14,13 +14,12 @@ export const checkMail = async (req, res, next) => {
 				.json(new APIResponse(400, false, "Email is required"));
 		}
 
-		console.log(email);
-
+		
 		const user = await User.findOne({ email });
 
 		if (user) {
 			req.gUser = user;
-			console.log(req.gUser);
+			
 			return next();
 		}
 
