@@ -271,7 +271,13 @@ export const googleSignIn = asyncHandler(async (req, res) => {
 		}
 	} while (!isUnique);
 
-	await User.create({ name, username, email, profileImg, firebaseId });
+	await User.create({
+		fullName: name,
+		username,
+		email,
+		profileImg,
+		firebaseId,
+	});
 
 	return res.status(200).json(new APIResponse(200, {}, `Welcome 😄`));
 });
