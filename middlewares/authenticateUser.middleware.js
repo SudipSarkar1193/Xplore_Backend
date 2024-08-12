@@ -8,6 +8,7 @@ export const authenticateUser = asyncHandler(async (req, res, next) => {
 		req.user = null;
 
 		const { firebaseId } = req.body;
+		console.log("firebaseId", firebaseId);
 		if (firebaseId) {
 			const fireBaseUser = await User.findOne({ firebaseId });
 			if (fireBaseUser) {

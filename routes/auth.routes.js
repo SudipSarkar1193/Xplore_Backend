@@ -15,7 +15,7 @@ import { ApiErrorResponseHandler } from "../middlewares/handleAPIErrorResponse.j
 const router = express.Router();
 
 router.post("/signup", signup, ApiErrorResponseHandler);
-router.post("/google", authenticateUser, googleSignIn, ApiErrorResponseHandler);
+router.post("/google", googleSignIn, ApiErrorResponseHandler);
 router.post("/login", login, ApiErrorResponseHandler);
 router.post("/checkmail", checkMail, ApiErrorResponseHandler);
 
