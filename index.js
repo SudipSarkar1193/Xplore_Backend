@@ -49,6 +49,12 @@ app.use("/api/v1/users", userRoute);
 app.use("/api/v1/posts", postRoute);
 app.use("/api/v1/notifications", notificationRoute);
 
+app.get("/test-cookie", (req, res) => {
+	res
+		.cookie("testCookie", "testValue", cookieOption)
+		.json({ message: "Cookie set!" });
+});
+
 // app.on("error", (err) => {
 // 	console.log("ERROR:", err);
 // 	throw err;
