@@ -1,6 +1,7 @@
 import { generateAccessAndRefreshToken } from "../controllers/auth.controllers.js";
 import { User } from "../models/user.model.js";
 import { APIError } from "../utils/APIError.js";
+import { APIResponse } from "../utils/APIResponse.js";
 
 export const checkMail = async (req, res, next) => {
 	try {
