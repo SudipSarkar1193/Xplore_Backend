@@ -260,10 +260,16 @@ export const googleSignIn = asyncHandler(async (req, res) => {
 	username = username?.toLowerCase();
 	username = username?.replace(" ", "");
 
+	let isUnique = false;
+
 	do {
 		const randInt = Math.floor(Math.random() * 900) + 10;
-		username = username + "" + randInt;
-	} while ((await User.findOne({ username })));
+		const potentialUsername = username + randInt;
+		if (!(await User.findOne({ username: potentialUsername }))) {
+			username = potentialUsername;
+			isUnique = true;
+		}
+	} while (!isUnique);
 
 	await User.create({ name, username, email, profileImg, firebaseId });
 
