@@ -7,21 +7,13 @@ export const authenticateUser = asyncHandler(async (req, res, next) => {
 	try {
 		req.user = null;
 
-		const { firebaseId } = req.body;
-		console.log("firebaseId", firebaseId);
-		if (firebaseId) {
-			const fireBaseUser = await User.findOne({ firebaseId });
-			if (fireBaseUser) {
-				req.user = fireBaseUser;
-				return next();
-			}
-		}
-
 		// Extract access token from cookies or Authorization header
 		const accessToken =
 			req.cookies?.accessToken ||
 			req.header("Authorization")?.replace("Bearer ", "");
 
+		console.log("accessToken", accessToken);
+		console.log("req.cookies", req.cookies);
 		if (!accessToken) {
 			return next(new APIError(401, "Unauthorized Request"));
 		}
