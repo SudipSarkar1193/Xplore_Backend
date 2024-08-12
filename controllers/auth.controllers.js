@@ -34,14 +34,6 @@ export const signup = asyncHandler(async (req, res) => {
 	}
 
 	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-	// const regex = /^[a-zA-Z0-9_]+$/;
-
-	// if (!regex.test(username)) {
-	// 	throw new APIError(
-	// 		400,
-	// 		" Only letters, numbers, and underscores are allowed"
-	// 	);
-	// }
 
 	if (!emailRegex.test(email)) {
 		throw new APIError(400, "Invalid Email format");
@@ -271,7 +263,7 @@ export const googleSignIn = asyncHandler(async (req, res) => {
 		}
 	} while (!isUnique);
 
-	await User.create({
+	user = await User.create({
 		fullName: name,
 		username,
 		email,
@@ -279,7 +271,26 @@ export const googleSignIn = asyncHandler(async (req, res) => {
 		firebaseId,
 	});
 
-	return res.status(200).json(new APIResponse(200, {}, `Welcome 😄`));
+	const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
+		user._id
+	);
+
+	const userResponse = user.toObject(); // Convert Mongoose document to plain JavaScript object
+	delete userResponse.password;
+	delete userResponse.refreshToken;
+
+	const cookieOption = {
+		maxAge: 15 * 24 * 60 * 60 * 1000, //MS
+		httpOnly: true,
+		sameSite: "None",
+		secure: true,
+	};
+
+	return res
+		.header("Access-Control-Allow-Credentials", true)
+		.cookie("accessToken", accessToken, cookieOption)
+		.cookie("refreshToken", refreshToken, cookieOption)
+		.json(new APIResponse(200, {}, `Welcome 😄`));
 });
 
 export const getCurrentUser = asyncHandler(async (req, res) => {
@@ -296,5 +307,3 @@ export const getCurrentUser = asyncHandler(async (req, res) => {
 	}
 	return res.status(200).json(user);
 });
-
-
