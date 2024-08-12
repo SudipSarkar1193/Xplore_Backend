@@ -28,11 +28,13 @@ export const checkMail = async (req, res, next) => {
 				secure: true,
 			};
 
-			return res
+			res
 				.header("Access-Control-Allow-Credentials", true)
 				.cookie("accessToken", accessToken, cookieOption)
 				.cookie("refreshToken", refreshToken, cookieOption)
 				.json(new APIResponse(200, {}, "User successfully logged in"));
+
+			return next(new APIError(401, "Already exist !!!!"));
 		}
 
 		next();
