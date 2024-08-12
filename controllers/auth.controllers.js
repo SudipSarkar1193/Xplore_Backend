@@ -23,7 +23,7 @@ export const signup = asyncHandler(async (req, res) => {
 	username = username?.toLowerCase();
 	username = username?.trim();
 	username = username?.replace(" ", "");
-	username = username.replace(/[@#\/>\`$%^&*()+|]/g, "");
+	username = username.replace(/[@#\/>\`$%^&*()+|]/g, "_");
 
 	if (
 		[fullName, username, email, password].some(
@@ -204,13 +204,7 @@ export const login = asyncHandler(async (req, res) => {
 		.header("Access-Control-Allow-Credentials", true)
 		.cookie("accessToken", accessToken, cookieOption)
 		.cookie("refreshToken", refreshToken, cookieOption)
-		.json(
-			new APIResponse(
-				200,
-				{ user: userResponse, accessToken, refreshToken },
-				"User successfully logged in"
-			)
-		);
+		.json(new APIResponse(200, {}, "User successfully logged in"));
 });
 
 export const logout = asyncHandler(async (req, res) => {
@@ -255,6 +249,27 @@ export const logout = asyncHandler(async (req, res) => {
 		);
 });
 
+export const googleSignIn = asyncHandler(async (req, res) => {
+	const { name, email, profileImg, firebaseId } = req.body;
+
+	let user = await User.findOne({ email });
+	if (user) {
+		throw new APIError(409, "User with this email already exists");
+	}
+	let username = name?.trim();
+	username = username?.toLowerCase();
+	username = username?.replace(" ", "");
+
+	do {
+		const randInt = Math.floor(Math.random() * 900) + 10;
+		username = username + "" + randInt;
+	} while (!(await User.findOne({ username })));
+
+	await User.create({ name, username, email, profileImg, firebaseId });
+
+	return res.status(200).json(new APIResponse(200, {}, `Welcome 😄`));
+});
+
 export const getCurrentUser = asyncHandler(async (req, res) => {
 	if (!req.user) {
 		throw new APIError(404, "No authenticated user found");
@@ -268,4 +283,19 @@ export const getCurrentUser = asyncHandler(async (req, res) => {
 		throw new APIError(404, "No authenticated user found");
 	}
 	return res.status(200).json(user);
+});
+
+export const checkMail = asyncHandler(async (req, res) => {
+	const email = req.email;
+	console.log(email);
+	const user = await User.findOne({ email });
+	if (user) {
+		return res
+			.status(200)
+			.json(new APIResponse(200, true, "User with this mail already exists"));
+	} else {
+		return res
+			.status(200)
+			.json(new APIResponse(200,false,"Okay"));
+	}
 });

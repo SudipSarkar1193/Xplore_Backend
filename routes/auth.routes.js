@@ -1,6 +1,8 @@
 import express from "express";
 import {
+	checkMail,
 	getCurrentUser,
+	googleSignIn,
 	login,
 	logout,
 	signup,
@@ -13,10 +15,11 @@ import { ApiErrorResponseHandler } from "../middlewares/handleAPIErrorResponse.j
 const router = express.Router();
 
 router.post("/signup", signup, ApiErrorResponseHandler);
+router.post("/google", authenticateUser, googleSignIn, ApiErrorResponseHandler);
 router.post("/login", login, ApiErrorResponseHandler);
+router.post("/checkmail", checkMail, ApiErrorResponseHandler);
 
 router.get("/:id/verify/:token", verifyEmail, ApiErrorResponseHandler);
-
 
 //SECURE routes
 

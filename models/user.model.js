@@ -14,8 +14,9 @@ const userSchema = new mongoose.Schema(
 		},
 		password: {
 			type: String,
-			required: true,
 			minLength: 6,
+			required: false,
+			default: null,
 		},
 		email: {
 			type: String,
@@ -64,11 +65,14 @@ const userSchema = new mongoose.Schema(
 			type: String,
 			default: "",
 		},
-		verified:{
-			type:Boolean,
-			default:false,
-		}
-	
+		verified: {
+			type: Boolean,
+			default: false,
+		},
+		firebaseId: {
+			type: String,
+			default: "",
+		},
 	},
 	{ timestamps: true }
 );
