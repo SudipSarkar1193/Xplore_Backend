@@ -286,9 +286,7 @@ export const googleSignIn = asyncHandler(async (req, res) => {
 	};
 
 	return res
-		.header("Access-Control-Allow-Credentials", true)
 		.cookie("accessToken", accessToken, cookieOption)
-		.cookie("Timm", "HAHAHHAHHHAHHAH BAK", cookieOption)
 		.cookie("refreshToken", refreshToken, cookieOption)
 		.json(new APIResponse(200, {}, `Welcome 😄`));
 });
