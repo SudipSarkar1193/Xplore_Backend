@@ -38,11 +38,16 @@ app.use(
 // Respond to preflight requests
 app.options("*", cors());
 
-// app.get("/", (req, res) => {
-// 	res.json({
-// 		message: "Xplore",
-// 	});
-// });
+app.get("/", (req, res) => {
+	res.json({
+		message: "Xplore",
+	});
+});
+app.get("/fuck", (req, res) => {
+	res.json({
+		message: "FUck",
+	});
+});
 
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/users", userRoute);
