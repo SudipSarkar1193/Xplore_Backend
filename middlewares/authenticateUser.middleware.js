@@ -13,7 +13,8 @@ export const authenticateUser = asyncHandler(async (req, res, next) => {
 			req.header("Authorization")?.replace("Bearer ", "");
 
 		console.log("accessToken", accessToken);
-		console.log("req.cookies", req.cookies);
+		console.log("timm", req.cookies?.Timm);
+		console.log("req.cookies  >>>>>> ", req.cookies);
 		if (!accessToken) {
 			return next(new APIError(401, "Unauthorized Request"));
 		}
