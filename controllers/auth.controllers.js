@@ -181,10 +181,6 @@ export const login = asyncHandler(async (req, res) => {
 		user._id
 	);
 
-	const userResponse = user.toObject(); // Convert Mongoose document to plain JavaScript object
-	delete userResponse.password;
-	delete userResponse.refreshToken;
-
 	const cookieOption = {
 		maxAge: 15 * 24 * 60 * 60 * 1000, //MS
 		httpOnly: true,
@@ -270,11 +266,12 @@ export const googleSignIn = asyncHandler(async (req, res) => {
 		profileImg,
 		firebaseId,
 	});
+	console.log("user BAL", user);
 
 	const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
 		user._id
 	);
-	console.log("accessToken ======", accessToken);
+	console.log("accessToken =====", accessToken);
 	console.log("refreshToken =====", refreshToken);
 
 	const cookieOption = {
@@ -286,6 +283,7 @@ export const googleSignIn = asyncHandler(async (req, res) => {
 	};
 
 	return res
+		.header("Access-Control-Allow-Credentials", true)
 		.cookie("accessToken", accessToken, cookieOption)
 		.cookie("refreshToken", refreshToken, cookieOption)
 		.json(new APIResponse(200, {}, `Welcome 😄`));
