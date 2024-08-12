@@ -184,7 +184,7 @@ export const login = asyncHandler(async (req, res) => {
 	const cookieOption = {
 		maxAge: 15 * 24 * 60 * 60 * 1000, //MS
 		httpOnly: true,
-		sameSite: "Lax",
+		sameSite: "None",
 		secure: true,
 	};
 
@@ -277,9 +277,8 @@ export const googleSignIn = asyncHandler(async (req, res) => {
 	const cookieOption = {
 		maxAge: 15 * 24 * 60 * 60 * 1000, //MS
 		httpOnly: true,
-		sameSite: "None",
+		sameSite: "Lax",
 		secure: true,
-		path: "/",
 	};
 
 	return res
