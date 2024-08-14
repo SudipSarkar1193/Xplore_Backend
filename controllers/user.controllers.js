@@ -200,20 +200,4 @@ export const updateUser = asyncHandler(async (req, res) => {
 	return res.status(200).json(new APIResponse(200, { user }));
 });
 
-export const followStatus = asyncHandler(async (req, res) => {
-	const { targetUserId } = req.params;
 
-	const currentUser = await req.user;
-
-	console.log("currentUser", currentUser);
-
-	if (!currentUser) {
-		throw new APIError(404, "Current user not found");
-	}
-
-	const isFollowing = currentUser.following.includes(targetUserId);
-
-	return res
-		.status(200)
-		.json(new APIResponse(200, isFollowing, "followStatus run successfully"));
-});
