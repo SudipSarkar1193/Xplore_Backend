@@ -89,8 +89,9 @@ export const followAndUnfollow = asyncHandler(async (req, res) => {
 	);
 });
 
-export const getSuggestedUsers = asyncHandler(async (req, res) => {
+export const getUsers = asyncHandler(async (req, res) => {
 	const { _id } = req.user;
+	const { type } = req.params;
 
 	// Get the current user to find their following list
 	const currentUser = await User.findById(_id).select("following");
@@ -100,27 +101,38 @@ export const getSuggestedUsers = asyncHandler(async (req, res) => {
 	}
 
 	// Use aggregation to find suggested users
-	const suggestions = await User.aggregate([
-		{
-			$match: {
-				_id: { $ne: _id, $nin: currentUser.following },
+	let users = [];
+	if (type == "suggestions") {
+		users = await User.aggregate([
+			{
+				$match: {
+					_id: { $ne: _id, $nin: currentUser.following },
+				},
 			},
-		},
-		{ $sample: { size: 8 } }, // Randomly select 10 users
-	]);
+			{ $sample: { size: 3 } }, // Randomly select 10 users
+		]);
+	} else {
+		users = await User.aggregate([
+			{
+				$match: {
+					_id: { $ne: _id },
+				},
+			},
+		]);
+	}
 
-	suggestions.forEach((user) => {
+	users.forEach((user) => {
 		user.password = null;
 		user.refreshToken = null;
 	});
 
-	if (!suggestions) {
+	if (!users) {
 		throw new APIError(500, "No suggested user found");
 	}
 
 	return res
 		.status(200)
-		.json(new APIResponse(200, { suggestions }, "fetched suggested users"));
+		.json(new APIResponse(200, { users }, "fetched suggested users"));
 });
 
 export const updateUser = asyncHandler(async (req, res) => {

@@ -36,7 +36,7 @@ export const authenticateUser = asyncHandler(async (req, res, next) => {
 
 		// Attach the user to the request object
 		req.user = user;
-
+		
 		next();
 	} catch (error) {
 		if (error.name === "TokenExpiredError") {

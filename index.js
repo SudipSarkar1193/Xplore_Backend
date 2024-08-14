@@ -43,14 +43,10 @@ app.get("/", (req, res) => {
 		message: "Xplore",
 	});
 });
-app.get("/fuck", (req, res) => {
-	res.json({
-		message: "FUck",
-	});
-});
+
 
 app.use("/api/v1/auth", authRoute);
-app.use("/api/v1/users", userRoute);
+app.use("/api/v1/users", userRoute);    //  /getusers/:type
 app.use("/api/v1/posts", postRoute);
 app.use("/api/v1/notifications", notificationRoute);
 
@@ -60,11 +56,7 @@ const cookieOption = {
 	sameSite: "None",
 	secure: true,
 };
-app.get("/test-cookie", (req, res) => {
-	res
-		.cookie("testCookie", "testValue", cookieOption)
-		.json({ message: "Cookie set!" });
-});
+
 
 // app.on("error", (err) => {
 // 	console.log("ERROR:", err);

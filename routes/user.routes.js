@@ -2,7 +2,7 @@ import express from "express";
 import {
 	followAndUnfollow,
 	getProfile,
-	getSuggestedUsers,
+	getUsers,
 	updateUser,
 } from "../controllers/user.controllers.js";
 import { authenticateUser } from "../middlewares/authenticateUser.middleware.js";
@@ -23,9 +23,9 @@ router.post(
 	ApiErrorResponseHandler
 );
 router.get(
-	"/suggestions",
+	"/getusers/:type",
 	authenticateUser,
-	getSuggestedUsers,
+	getUsers,
 	ApiErrorResponseHandler
 );
 router.post("/update", authenticateUser, updateUser, ApiErrorResponseHandler);
