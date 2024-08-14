@@ -218,7 +218,7 @@ export const commentOnPost = asyncHandler(async (req, res) => {
 });
 
 export const getAllPosts = asyncHandler(async (req, res) => {
-	let { page = 1, limit = 20 } = req.query;
+	let { page = 1, limit = 60 } = req.query;
 	limit = Number(limit);
 	const user = await User.findById(req.user._id).select("following"); //getting user following list as query;
 
