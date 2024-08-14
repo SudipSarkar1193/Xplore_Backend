@@ -12,9 +12,6 @@ export const authenticateUser = asyncHandler(async (req, res, next) => {
 			req.cookies?.accessToken ||
 			req.header("Authorization")?.replace("Bearer ", "");
 
-		
-		
-		
 		if (!accessToken) {
 			return next(new APIError(401, "Unauthorized Request"));
 		}
@@ -27,7 +24,7 @@ export const authenticateUser = asyncHandler(async (req, res, next) => {
 
 		// Find the user associated with the token
 		const user = await User.findById(verifiedToken._id).select(
-			"_id username email profileImg fullName"
+			"_id username email"
 		);
 
 		if (!user) {
@@ -36,7 +33,7 @@ export const authenticateUser = asyncHandler(async (req, res, next) => {
 
 		// Attach the user to the request object
 		req.user = user;
-		
+
 		next();
 	} catch (error) {
 		if (error.name === "TokenExpiredError") {
