@@ -200,4 +200,59 @@ export const updateUser = asyncHandler(async (req, res) => {
 	return res.status(200).json(new APIResponse(200, { user }));
 });
 
+export const getFollowers = asyncHandler(async (req, res) => {
+	const { id } = req.params;
 
+	const user = await User.findById(id);
+
+	const followersId = user.followers;
+
+	const followers = await User.aggregate([
+		{
+			$match: {
+				_id: { $in: followersId },
+			},
+		},
+	]);
+
+	if (!followers) {
+		throw new APIError(500, "Damn! No followers🥲");
+	}
+
+	followers.forEach((follower) => {
+		follower.password = null;
+		follower.refreshToken = null;
+	});
+
+	return res
+		.status(200)
+		.json(new APIResponse(200, { followers }, "fetched followers"));
+});
+
+export const getFollowingUsers = asyncHandler(async (req, res) => {
+	const { id } = req.params;
+	const user = await User.findById(id);
+
+	const followingId = user.following;
+
+	const followings = await User.aggregate([
+		{
+			$match: {
+				_id: { $in: followingId },
+			},
+		},
+	]);
+
+	if (!followings) {
+		throw new APIError(500, "You follow nobody 🥸");
+	}
+
+	followings.forEach((following) => {
+		following.password = null;
+		following.refreshToken = null;
+	});
+
+	return res
+		.status(200)
+		.json(new APIResponse(200, { followings }, "fetched followers"));
+});

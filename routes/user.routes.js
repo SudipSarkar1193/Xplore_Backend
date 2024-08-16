@@ -1,6 +1,8 @@
 import express from "express";
 import {
 	followAndUnfollow,
+	getFollowers,
+	getFollowingUsers,
 	getProfile,
 	getUsers,
 	updateUser,
@@ -28,7 +30,18 @@ router.get(
 	getUsers,
 	ApiErrorResponseHandler
 );
-
+router.get(
+	"/getfollowers/:id",
+	authenticateUser,
+	getFollowers,
+	ApiErrorResponseHandler
+);
+router.get(
+	"/getfollowings/:id",
+	authenticateUser,
+	getFollowingUsers,
+	ApiErrorResponseHandler
+);
 router.post("/update", authenticateUser, updateUser, ApiErrorResponseHandler);
 
 export default router;
