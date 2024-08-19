@@ -66,13 +66,16 @@ const userSchema = new mongoose.Schema(
 			default: "",
 		},
 		verified: {
-			type: Boolean,
-			default: false,
+			
 		},
 		firebaseId: {
 			type: String,
 			default: "",
 		},
+		isOnline : {
+			type: Boolean,
+			default: false,
+		}
 	},
 	{ timestamps: true }
 );

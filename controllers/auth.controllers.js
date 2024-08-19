@@ -202,12 +202,13 @@ export const logout = asyncHandler(async (req, res) => {
 	if (!user) {
 		throw new APIError(401, "User is not authorized");
 	}
-	//Find the user from the DB and set the accessToken to be a null value
+	//Find the user from the DB and set the accessToken to be a null value and isOnline to be false
 	const loggedOutUser = await User.findByIdAndUpdate(
 		user._id,
 		{
 			$set: {
 				refreshToken: "",
+				isOnline: false,
 			},
 		},
 		{
@@ -239,7 +240,7 @@ export const logout = asyncHandler(async (req, res) => {
 
 export const googleSignIn = asyncHandler(async (req, res) => {
 	let user;
-	
+
 	if (req.gUser) {
 		user = req.gUser;
 	} else {
@@ -271,13 +272,10 @@ export const googleSignIn = asyncHandler(async (req, res) => {
 			profileImg,
 			firebaseId,
 		});
-		
 	}
 	const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
 		user._id
 	);
-	
-	
 
 	const cookieOption = {
 		maxAge: 15 * 24 * 60 * 60 * 1000, //MS

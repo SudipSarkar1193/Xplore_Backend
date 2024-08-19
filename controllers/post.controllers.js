@@ -365,17 +365,6 @@ export const getAllLikedPosts = asyncHandler(async (req, res) => {
 	}
 	const likedPostsArray = user.likedPosts;
 
-	// const likedPosts = await Post.find({
-	// 	_id: { $in: likedPostsArray },
-	// })
-	// 	.populate({
-	// 		path: "author",
-	// 		select: "-password -refreshToken",
-	// 	})
-	// 	.populate({
-	// 		path: "comments.author",
-	// 		select: "-password -refreshToken",
-	// 	});
 
 	const likedPosts = await Post.aggregate([
 		{

@@ -10,6 +10,7 @@ import cors from "cors";
 import { APIError } from "./utils/APIError.js";
 import { APIResponse } from "./utils/APIResponse.js";
 import path from "path";
+import { User } from "./models/user.model.js";
 
 dotenv.config({
 	path: "./.env",
@@ -66,7 +67,11 @@ const cookieOption = {
 app.listen(process.env.PORT, async () => {
 	try {
 		console.log(`\nServer is running at port : ${process.env.PORT}`);
+		
+
 		await connectDB();
+		await User.updateMany({}, { $set: { isOnline: false } });
+		console.log("Done updateMany")
 	} catch (error) {
 		console.log(error);
 		throw error;

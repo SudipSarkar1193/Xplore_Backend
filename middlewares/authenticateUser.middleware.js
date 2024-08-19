@@ -23,9 +23,17 @@ export const authenticateUser = asyncHandler(async (req, res, next) => {
 		);
 
 		// Find the user associated with the token
-		const user = await User.findById(verifiedToken._id).select(
-			"_id username email"
-		);
+		const user = await User.findByIdAndUpdate(
+			verifiedToken._id,
+			{
+				$set: {
+					isOnline: true,
+				},
+			},
+			{
+				new: true,
+			}
+		).select("_id username email isOnline");
 
 		if (!user) {
 			return next(new APIError(404, "User not found."));
