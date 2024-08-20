@@ -33,7 +33,7 @@ export const authenticateUser = asyncHandler(async (req, res, next) => {
 			{
 				new: true,
 			}
-		).select("_id username email isOnline");
+		).select("_id username email isOnline bookmarks");
 
 		if (!user) {
 			return next(new APIError(404, "User not found."));
