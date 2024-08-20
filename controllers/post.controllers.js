@@ -121,6 +121,47 @@ export const likeUnlikePost = asyncHandler(async (req, res) => {
 		.json(new APIResponse(200, { updatedLikes }, `${action} post`));
 });
 
+export const bookmarkUnbookmarkPost = asyncHandler(async (req, res) => {
+	const { postId } = req.params;
+	const userId = req.user._id.toString();
+
+	const post = await Post.findById(postId);
+	if (!post) {
+		throw new APIError(404, "Post not found");
+	}
+
+
+	const user = await User.findById(userId);
+	if (!user) {
+		throw new APIError(404, "User not found");
+	}
+
+
+	// Check if the post is already bookmarked by the user
+	const isAlreadyBookmarked = user.bookmarks.includes(postId);
+
+	// Update the user's bookmarked posts array
+	const updateBookmarkedPostsArray = isAlreadyBookmarked
+		? { $pull: { bookmarks: postId } }
+		: { $push: { bookmarks: postId } };
+
+	const action = isAlreadyBookmarked ? "Unbookmarked" : "Bookmarked";
+
+	// Update the user document with the new bookmarked posts array
+	const updatedUser = await User.findByIdAndUpdate(
+		req.user._id,
+		updateBookmarkedPostsArray,
+		{
+			new: true,
+		}
+	);
+
+	return res
+		.status(200)
+		.json(new APIResponse(200, { bookmarkedPosts: updatedUser.bookmarks }, `${action} post`));
+});
+
+
 export const commentOnPost = asyncHandler(async (req, res) => {
 	const { text } = req.body;
 	if (!text) {
@@ -365,7 +406,6 @@ export const getAllLikedPosts = asyncHandler(async (req, res) => {
 	}
 	const likedPostsArray = user.likedPosts;
 
-
 	const likedPosts = await Post.aggregate([
 		{
 			$match: {
@@ -470,6 +510,123 @@ export const getAllLikedPosts = asyncHandler(async (req, res) => {
 				200,
 				{ posts: likedPosts, totalPosts, totalPages },
 				"All liked posts retrieved successfully"
+			)
+		);
+});
+
+export const getAllBookmarkedPosts = asyncHandler(async (req, res) => {
+	let { page = 1, limit = 20 } = req.query;
+	limit = Number(limit);
+
+	const user = await User.findById(req.user._id);
+
+	const bookmarksArray = user.bookmarks;
+
+	const bookmarks = await Post.aggregate([
+		{
+			$match: {
+				_id: { $in: bookmarksArray },
+			},
+		},
+		// Step 2: Sort the posts by isFollowedAuthor and createdAt
+		{
+			$sort: {
+				createdAt: -1,
+			},
+		},
+		// Step 3: Pagination
+		{
+			$skip: (page - 1) * limit,
+		},
+		{
+			$limit: limit,
+		},
+		// Step 4: Lookup for author details
+		{
+			$lookup: {
+				from: "users",
+				localField: "author",
+				foreignField: "_id",
+				as: "authorDetails",
+			},
+		},
+		{
+			$unwind: "$authorDetails",
+		},
+		{
+			$project: {
+				"authorDetails.password": 0,
+				"authorDetails.refreshToken": 0,
+			},
+		},
+		// Step 5: Unwind comments to perform lookup for each comment's author
+		{
+			$unwind: {
+				path: "$comments",
+				preserveNullAndEmptyArrays: true, // To keep posts with no comments
+			},
+		},
+		// Step 6: Lookup for comment author details
+		{
+			$lookup: {
+				from: "users",
+				localField: "comments.author",
+				foreignField: "_id",
+				as: "comments.authorDetails",
+			},
+		},
+		{
+			$unwind: {
+				path: "$comments.authorDetails",
+				preserveNullAndEmptyArrays: true, // To handle comments with no author details
+			},
+		},
+		// Exclude sensitive fields from comments.authorDetails
+		{
+			$project: {
+				"comments.authorDetails.password": 0,
+				"comments.authorDetails.refreshToken": 0,
+			},
+		},
+		// Step 7: Group comments back together
+		{
+			$group: {
+				_id: "$_id",
+				text: { $first: "$text" },
+				img: { $first: "$img" },
+				likes: { $first: "$likes" },
+				author: { $first: "$author" },
+				authorDetails: { $first: "$authorDetails" },
+				comments: {
+					$push: {
+						text: "$comments.text",
+						author: "$comments.author",
+						authorDetails: "$comments.authorDetails",
+					},
+				},
+				createdAt: { $first: "$createdAt" },
+				updatedAt: { $first: "$updatedAt" },
+				isFollowedAuthor: { $first: "$isFollowedAuthor" },
+			},
+		},
+		// Step 8: Restore the original sort order
+		{
+			$sort: {
+				createdAt: -1,
+			},
+		},
+	]);
+
+	const totalBookmarks = bookmarksArray.length;
+	const totalPages = Math.ceil(totalBookmarks / limit);
+
+	return res
+		.status(200)
+		.json(
+			new APIResponse(
+				200,
+				{ posts: bookmarks, totalBookmarks, totalPages },
+				"All bookmarked posts retrieved successfully"
 			)
 		);
 });

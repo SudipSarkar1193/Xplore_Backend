@@ -1,9 +1,11 @@
 import express from "express";
 import { authenticateUser } from "../middlewares/authenticateUser.middleware.js";
 import {
+	bookmarkUnbookmarkPost,
 	commentOnPost,
 	createPost,
 	deletePost,
+	getAllBookmarkedPosts,
 	getAllFollowingPosts,
 	getAllLikedPosts,
 	getAllPosts,
@@ -23,6 +25,14 @@ router.post(
 	likeUnlikePost,
 	ApiErrorResponseHandler
 );
+
+router.post(
+	"/bookmark/:postId",
+	authenticateUser,
+	bookmarkUnbookmarkPost,
+	ApiErrorResponseHandler
+);
+
 router.post(
 	"/comment/:postId",
 	authenticateUser,
@@ -34,5 +44,6 @@ router.get("/all", authenticateUser, getAllPosts);
 router.get("/following", authenticateUser, getAllFollowingPosts);
 router.get("/posts/:id", authenticateUser, validateObjectId, getUserPosts);
 router.get("/likes/:id", authenticateUser, validateObjectId, getAllLikedPosts);
+router.get("/bookmarks", authenticateUser, getAllBookmarkedPosts);
 
 export default router;

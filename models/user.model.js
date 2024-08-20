@@ -61,6 +61,13 @@ const userSchema = new mongoose.Schema(
 				default: [],
 			},
 		],
+		bookmarks: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: "Post",
+				default: [],
+			},
+		],
 		refreshToken: {
 			type: String,
 			default: "",
