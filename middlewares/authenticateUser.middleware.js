@@ -46,13 +46,15 @@ export const authenticateUser = asyncHandler(async (req, res, next) => {
 	} catch (error) {
 		if (error.name === "TokenExpiredError") {
 			// Handle token expiration
+			console.error("DEBUGGING : Session expired. Please log in again.");
 			return next(new APIError(401, "Session expired. Please log in again."));
 		} else if (error.name === "JsonWebTokenError") {
 			// Handle invalid token
+			console.error("Invalid token. Please log in again.");
 			return next(new APIError(401, "Invalid token. Please log in again."));
 		} else {
 			// Handle other errors
-			console.error("Authentication error:", error);
+			console.error("### Authentication error:", error);
 			next(new APIError(500, error.message));
 		}
 	}

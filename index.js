@@ -45,9 +45,8 @@ app.get("/", (req, res) => {
 	});
 });
 
-
 app.use("/api/v1/auth", authRoute);
-app.use("/api/v1/users", userRoute);    //  /getusers/:type
+app.use("/api/v1/users", userRoute); //  /getusers/:type
 app.use("/api/v1/posts", postRoute);
 app.use("/api/v1/notifications", notificationRoute);
 
@@ -58,7 +57,6 @@ const cookieOption = {
 	secure: true,
 };
 
-
 // app.on("error", (err) => {
 // 	console.log("ERROR:", err);
 // 	throw err;
@@ -67,11 +65,11 @@ const cookieOption = {
 app.listen(process.env.PORT, async () => {
 	try {
 		console.log(`\nServer is running at port : ${process.env.PORT}`);
-		
 
 		await connectDB();
 		await User.updateMany({}, { $set: { isOnline: false } });
-		console.log("Done updateMany")
+		
+		console.log("Done updateMany");
 	} catch (error) {
 		console.log(error);
 		throw error;

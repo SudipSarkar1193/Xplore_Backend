@@ -242,7 +242,9 @@ export const googleSignIn = asyncHandler(async (req, res) => {
 	let user;
 
 	if (req.gUser) {
+
 		user = req.gUser;
+
 	} else {
 		const { name, email, profileImg, firebaseId } = req.body;
 
@@ -288,7 +290,7 @@ export const googleSignIn = asyncHandler(async (req, res) => {
 		.header("Access-Control-Allow-Credentials", true)
 		.cookie("accessToken", accessToken, cookieOption)
 		.cookie("refreshToken", refreshToken, cookieOption)
-		.json(new APIResponse(200, {}, `Welcome 😄`));
+		.json(new APIResponse(200, {}, `Welcome !!! 😄`));
 });
 
 export const getCurrentUser = asyncHandler(async (req, res) => {
