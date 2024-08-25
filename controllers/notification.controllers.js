@@ -2,13 +2,17 @@ import { APIError } from "../utils/APIError.js";
 import { APIResponse } from "../utils/APIResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { Notification } from "../models/notification.model.js";
+
 export const getNotifications = asyncHandler(async (req, res) => {
 	const userId = req.user._id;
 
-	const notifications = await Notification.find({ to: userId }).populate({
-		path: "from",
-		select: "username profileImg",
-	});
+	const notifications = await Notification.find({ to: userId })
+		.populate({
+			path: "from",
+			select: "username profileImg",
+		})
+		.sort({ createdAt: -1 });
+
 	if (!notifications) {
 		throw new APIError(500, "No notification is found");
 	}
