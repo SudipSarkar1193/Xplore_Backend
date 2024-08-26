@@ -13,7 +13,7 @@ export const authenticateUser = asyncHandler(async (req, res, next) => {
 			req.header("Authorization")?.replace("Bearer ", "");
 
 		if (!accessToken) {
-			return next(new APIError(401, "Unauthorized Request"));
+			return next(new APIError(401, "Unauthorized access Request"));
 		}
 
 		// Verify the JWT token
@@ -36,7 +36,7 @@ export const authenticateUser = asyncHandler(async (req, res, next) => {
 		).select("_id username email isOnline bookmarks");
 
 		if (!user) {
-			return next(new APIError(404, "User not found."));
+			return next(new APIError(404, "OOps!! User not found."));
 		}
 
 		// Attach the user to the request object
