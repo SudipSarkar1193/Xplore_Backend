@@ -28,7 +28,11 @@ app.use((req, res, next) => {
 
 app.use(
 	cors({
-		origin: [process.env.CORS_ORIGIN, "http://localhost:5173"],
+		origin: [
+			process.env.CORS_ORIGIN,
+			"http://localhost:5173",
+			"https://66cd82c6215411a7d5de09eb--xplore-com.netlify.app",
+		],
 		methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
 		allowedHeaders: ["Content-Type", "Authorization"],
 		credentials: true,
@@ -87,6 +91,7 @@ app.listen(process.env.PORT, async () => {
 		// 		},
 		// 	} // Update action: set the profileImg to the new URL
 		// );
+
 		console.log("Done updateMany");
 	} catch (error) {
 		console.log(error);
