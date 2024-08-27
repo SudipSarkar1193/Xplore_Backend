@@ -242,9 +242,7 @@ export const googleSignIn = asyncHandler(async (req, res) => {
 	let user;
 
 	if (req.gUser) {
-
 		user = req.gUser;
-
 	} else {
 		const { name, email, profileImg, firebaseId } = req.body;
 
@@ -294,11 +292,16 @@ export const googleSignIn = asyncHandler(async (req, res) => {
 });
 
 export const getCurrentUser = asyncHandler(async (req, res) => {
-	if (!req.user) {
+	if (req.user === null) {
 		throw new APIError(404, "No authenticated user found");
 	}
 
-	const user = await User.findById(req.user._id).select(
+	if (!req.user) {
+		throw new APIError(404, "No authenticated user found [as !req.user]");
+	}
+
+
+	const user = await User.findById(req.user?._id).select(
 		"-password -refreshToken"
 	);
 
