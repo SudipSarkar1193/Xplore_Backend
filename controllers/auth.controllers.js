@@ -291,22 +291,25 @@ export const googleSignIn = asyncHandler(async (req, res) => {
 		.json(new APIResponse(200, {}, `Welcome !!! 😄`));
 });
 
-export const getCurrentUser = asyncHandler(async (req, res) => {
-	if (req.user === null) {
-		throw new APIError(404, "No authenticated user found");
+export const getCurrentUser = async (req, res) => {
+	try {
+		if (req.user === null) {
+			return res.status(200).json(false);
+		}
+
+		if (!req.user) {
+			return res.status(200).json(false);
+		}
+
+		const user = await User.findById(req.user?._id).select(
+			"-password -refreshToken"
+		);
+
+		if (!user) {
+			return res.status(200).json(false);
+		}
+		return res.status(200).json(user);
+	} catch (error) {
+		console.error("Error from /me route\n", error);
 	}
-
-	if (!req.user) {
-		throw new APIError(404, "No authenticated user found [as !req.user]");
-	}
-
-
-	const user = await User.findById(req.user?._id).select(
-		"-password -refreshToken"
-	);
-
-	if (!user) {
-		throw new APIError(404, "No authenticated user found");
-	}
-	return res.status(200).json(user);
-});
+};
