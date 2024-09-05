@@ -71,32 +71,13 @@ const cookieOption = {
 // 	console.log("ERROR:", err);
 // 	throw err;
 // });
-
-app.listen(process.env.PORT, async () => {
+const port = process.env.PORT || 800;
+app.listen(port, async () => {
 	try {
-		console.log(`\nServer is running at port : ${process.env.PORT}`);
+		console.log(`\nServer is running at port : ${port}`);
 
 		await connectDB();
 		await User.updateMany({}, { $set: { isOnline: false } });
-
-		// await User.updateMany(
-		// 	{ profileImg: { $ne: "" } }, // Condition: profileImg is not an empty string
-		// 	{
-		// 		$set: {
-		// 			profileImg:
-		// 				"https://res.cloudinary.com/dvsutdpx2/image/upload/v1724682953/yrf9d7ejdiv3wqmntkic.png",
-		// 		},
-		// 	} // Update action: set the profileImg to the new URL
-		// );
-		// await User.updateMany(
-		// 	{ coverImg: { $ne: "" } }, // Condition: profileImg is not an empty string
-		// 	{
-		// 		$set: {
-		// 			coverImg:
-		// 				"https://res.cloudinary.com/dvsutdpx2/image/upload/v1724683454/sbp5weeswadkfozrsdxo.png",
-		// 		},
-		// 	} // Update action: set the profileImg to the new URL
-		// );
 
 		console.log("Done updateMany");
 	} catch (error) {
