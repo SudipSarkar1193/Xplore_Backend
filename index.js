@@ -30,9 +30,9 @@ app.use(
 	cors({
 		origin: [
 			process.env.CORS_ORIGIN,
-			"http://localhost:5173",
 			"https://66cd82c6215411a7d5de09eb--xplore-com.netlify.app",
 			"https://xplore-com.netlify.app",
+			"https://xplore-frontend-brown.vercel.app",
 		],
 		methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
 		allowedHeaders: ["Content-Type", "Authorization"],
@@ -40,6 +40,11 @@ app.use(
 		optionsSuccessStatus: 200,
 	})
 );
+
+app.use((req, res, next) => {
+	console.log(`${req.method} request to ${req.url}`);
+	next();
+});
 
 // Respond to preflight requests
 app.options("*", cors());
