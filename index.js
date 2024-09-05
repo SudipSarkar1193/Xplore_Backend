@@ -71,7 +71,7 @@ const cookieOption = {
 // 	console.log("ERROR:", err);
 // 	throw err;
 // });
-const port = process.env.PORT || 800;
+const port = process.env.PORT || 8000;
 app.listen(port, async () => {
 	try {
 		console.log(`\nServer is running at port : ${port}`);
